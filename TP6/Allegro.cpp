@@ -1,4 +1,4 @@
-#include "allegro.h"
+#include "Allegro.h"
 #include <allegro5/allegro5.h>
 #include <allegro5/allegro_image.h>
 #include <allegro5/allegro_primitives.h>
@@ -8,7 +8,7 @@
 
 using namespace std;
 
-bool init(void) {                       //Funcion que inicializa todo allegro. No recibe nada. Devuelve un true si esta todo ok, false si hay error.
+bool Allegro::init(void) {                       //Funcion que inicializa todo allegro. No recibe nada. Devuelve un true si esta todo ok, false si hay error.
 
     if (!al_init()) {
         cout << "failed to initialize allegro!" << endl;
@@ -44,7 +44,7 @@ bool init(void) {                       //Funcion que inicializa todo allegro. N
     return true;          
 }
 
-void destroy(void) {
+void Allegro::destroy(void) {
     al_shutdown_image_addon();
     al_shutdown_ttf_addon();
     al_shutdown_font_addon();
