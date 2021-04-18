@@ -18,3 +18,11 @@ string lcdError::getErrorDescription() {
 unsigned long lcdError::getErrorCode() {
 	return code;
 }
+
+basicLCD::basicLCD() {
+
+}
+
+basicLCD::~basicLCD() {
+
+}
