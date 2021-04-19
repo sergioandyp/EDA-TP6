@@ -45,7 +45,7 @@ public:
 	* que se hubiera tomado de forma de evitar
 	* "resources leak".
 	*=====================================================*/
-	~basicLCD();
+	virtual ~basicLCD();
 
 	/*=====================================================
 	* Name: lcdInitOk
