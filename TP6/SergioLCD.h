@@ -1,51 +1,22 @@
-#ifndef _BASIC_LCD_
-#define _BASIC_LCD_ 
+#ifndef _SERGIO_LCD_H_
+#define _SERGIO_LCD_H_
 
-#include <string>
+#include "basicLCD.h"
 
-struct cursorPosition
-{
-	int row;
-	int column;
-};
+#include <allegro5/allegro.h>
+#include <allegro5/allegro_font.h>
 
-class lcdError
-{
+#define LCD_ROW_COUNT	2
+#define LCD_COL_COUNT	16
+
+enum errorCode {E_OK, E_INIT, E_POS};
+
+class SergioLCD : public basicLCD {
 public:
-	lcdError(std::string name, std::string desc, unsigned long code);
-	std::string getErrorName();
-	std::string getErrorDescription();
-	unsigned long getErrorCode();
+	
+	SergioLCD();
 
-private:
-	std::string name;
-	std::string description;
-	unsigned long code;
-};
-
-
-class basicLCD
-{
-public:
-
-	/*=====================================================
-	* Name: basicLCD
-	* Entra: -
-	* Resulta: Constructor de la clase. Inicializa el LCD y deja
-	* todo listo comenzar a utilizarlo.
-	*
-	* cadd =1 (cursor address) (ver NOTA 1)
-	*=====================================================*/
-	basicLCD();
-
-	/*=====================================================
-	* Name: ~basicLCD
-	* Entra: -
-	* Resulta: Destructor de la clase. Libera cualquier recurso
-	* que se hubiera tomado de forma de evitar
-	* "resources leak".
-	*=====================================================*/
-	virtual ~basicLCD();
+	~SergioLCD();
 
 	/*=====================================================
 	* Name: lcdInitOk
@@ -55,7 +26,7 @@ public:
 	* correctamente (el constructor no tuvo errores) o “false
 	* en caso contrario.
 	*=====================================================*/
-	virtual bool lcdInitOk() = 0;
+	virtual bool lcdInitOk();
 
 	/*=====================================================
 	* Name: lcdGetError
@@ -63,7 +34,7 @@ public:
 	* Resulta: No genera ningún cambio en el display.
 	* Devuelve en su nombre un lcdError&
 	*=====================================================*/
-	virtual lcdError& lcdGetError() = 0;
+	virtual lcdError& lcdGetError();
 
 	/*=====================================================
 	* Name: lcdClear
@@ -73,7 +44,7 @@ public:
 	* Devuelve en su nombre “true” si fue satisfactoria “false”
 	* en caso contrario.
 	*=====================================================*/
-	virtual bool lcdClear() = 0;
+	virtual bool lcdClear();
 
 	/*=====================================================
 	* Name: lcdClearToEOL
@@ -84,7 +55,7 @@ public:
 	* Devuelve en su nombre “true” si fue satisfactoria “false”
 	* en caso contrario.
 	*=====================================================*/
-	virtual bool lcdClearToEOL() = 0;
+	virtual bool lcdClearToEOL();
 
 	/*=====================================================
 	* Name: operator<<()
@@ -99,7 +70,7 @@ public:
 	* basicLCD lcd;
 	* lcd << ‘a’ << ‘b’ << ‘c’;
 	*=====================================================*/
-	virtual basicLCD& operator<<(const char c) = 0;
+	virtual basicLCD& operator<<(const char c);
 
 	/*=====================================================
 	* Name: operator<<()
@@ -114,7 +85,7 @@ public:
 	* basicLCD lcd;
 	* lcd << “Hola” << “ “ << “Mundo”;
 	*=====================================================*/
-	virtual basicLCD& operator<<(const char* c) = 0;
+	virtual basicLCD& operator<<(const char* c);
 
 	/*=====================================================
 	* Name: lcdMoveCursorUp
@@ -126,7 +97,7 @@ public:
 	* Devuelve en su nombre “true” si fue satisfactoria “false”
 	* en caso contrario.
 	*=====================================================*/
-	virtual bool lcdMoveCursorUp() = 0;
+	virtual bool lcdMoveCursorUp();
 
 	/*=====================================================
 	* Name: lcdMoveCursorDown
@@ -138,7 +109,7 @@ public:
 	* Devuelve en su nombre “true” si fue satisfactoria “false”
 	* en caso contrario.
 	*=====================================================*/
-	virtual bool lcdMoveCursorDown() = 0;
+	virtual bool lcdMoveCursorDown();
 
 	/*=====================================================
 	* Name: lcdMoveCursorRight
@@ -149,7 +120,7 @@ public:
 	* Devuelve en su nombre “true” si fue satisfactoria “false”
 	* en caso contrario.
 	*=====================================================*/
-	virtual bool lcdMoveCursorRight() = 0;
+	virtual bool lcdMoveCursorRight();
 
 	/*=====================================================
 	* Name: lcdMoveCursorLeft
@@ -160,19 +131,19 @@ public:
 	* Devuelve en su nombre “true” si fue satisfactoria “false”
 	* en caso contrario.
 	*=====================================================*/
-	virtual bool lcdMoveCursorLeft() = 0;
+	virtual bool lcdMoveCursorLeft();
 
 	/*=====================================================
 	* Name: lcdSetCursorPosition
 	* Entra: Recibe una estructura tipo cursorPosition
 	* Resulta: Posiciona el cursor en la posición dada
-	* por row y column. row[0-1] col[0-19]. Ante un valor inválido
+	* por row y column. row[0-1] col[0-15]. Ante un valor inválido
 	* de row y/o column ignora la instrucción (no hace nada).
 	*
 	* Devuelve en su nombre “true” si fue satisfactoria “false”
 	* en caso contrario.
 	*=====================================================*/
-	virtual bool lcdSetCursorPosition(const cursorPosition pos) = 0;
+	virtual bool lcdSetCursorPosition(const cursorPosition pos);
 
 	/*=====================================================
 	* Name: lcdGetCursorPosition
@@ -182,8 +153,32 @@ public:
 	*
 	* Devuelve una estructura tipo cursorPosition
 	*=====================================================*/
-	virtual cursorPosition lcdGetCursorPosition() = 0;
+	virtual cursorPosition lcdGetCursorPosition();
+
+protected:
+	
+	cursorPosition cursor;
+	lcdError error;
+
+	std::string text;
+
+private:
+	ALLEGRO_DISPLAY* display;
+	ALLEGRO_BITMAP* image;
+	ALLEGRO_FONT* font;
+
+	void print();
+	int getLengthToEOL();
+	int getLengthToEnd();
+	void setError(errorCode code);
+
+	/*	offset > 0 se mueve para la derecha,
+	*	offset < 0 se mueve para la izquierda
+	*	Si supera limites se pasa de fila
+	*	Devuelve false si se intento superar un limite maximo/minimo
+	*/
+	bool moveCursorOffset(int offset);
 
 };
 
-#endif // _BASIC_LCD_
+#endif // _SERGIO_LCD_H_
