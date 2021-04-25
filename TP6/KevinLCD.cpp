@@ -17,16 +17,18 @@
 #define COLUMN  16
 #define ROW 2
 
+#define FPS 11
+
 #define INIT_X_POS 100
 #define X_OFFSET 22.5
 #define Y_OFFSET 35
 #define INIT_Y_POS 90
 
 /*ERROR CODES*/
-enum ERROR { KEYBOARD_ERROR = 1, DISPLAY_ERROR, IMAGE_ERROR, EVENT_QUEUE_ERROR, FONT_ERROR, CURSOR_SET, CURSOR_UP, CURSOR_DOWN, CURSOR_LEFT, CURSOR_RIGHT };
+enum ERROR { KEYBOARD_ERROR = 1, DISPLAY_ERROR, IMAGE_ERROR, EVENT_QUEUE_ERROR, FONT_ERROR, CURSOR_SET, CURSOR_UP, CURSOR_DOWN, CURSOR_LEFT, CURSOR_RIGHT, CURSOR_STILL_RIGHT };
 
 
-ALLEGRO_DISPLAY* display = NULL;        //VER SI NO PUEDO HACERLO NO GLOBAL
+ALLEGRO_DISPLAY* display = NULL;       
 ALLEGRO_EVENT_QUEUE* event_queue = NULL;
 ALLEGRO_BITMAP* img = NULL;
 ALLEGRO_FONT* font = NULL;
@@ -80,7 +82,7 @@ bool KevinLCD::lcdInitOk() {
     return true;
 }
 
-KevinLCD::KevinLCD() :myerror("", "", 0) {
+KevinLCD::KevinLCD() :myerror("No error", "No error", 0) {  // Inicializacion
     cursor.column = 1;
     cursor.row = 1;
     str = "";
@@ -99,19 +101,18 @@ lcdError& KevinLCD::lcdGetError() {
 };
 
 bool KevinLCD::lcdClear() {
-    str.resize(0, ' ');
+    str.resize(0, ' ');             // Borro el string
     str.resize(COLUMN * ROW, ' ');
-    //str.resize(0);
     al_draw_bitmap(img, 0, 0, 0);
     al_flip_display();
-    cursor.column = 1;
+    cursor.column = 1;              // Reseteo el cursor
     cursor.row = 1;
     return true;
 }
 
 bool KevinLCD::lcdClearToEOL() {
-    str.resize(cursor.column + (cursor.row - 1) * COLUMN - 1, ' ');
-    str.resize(COLUMN * ROW, ' ');
+    str.resize(cursor.column + (cursor.row - 1) * COLUMN - 1, ' ');     // Borro el string desde el cursor
+    str.resize(COLUMN * ROW, ' ');                                      // y lo completo con espacios
     al_draw_bitmap(img, 0, 0, 0);
     al_flip_display();
     return true;
@@ -119,46 +120,38 @@ bool KevinLCD::lcdClearToEOL() {
 
 basicLCD& KevinLCD::operator<<(const char c) {
     al_draw_bitmap(img, 0, 0, 0);
-    if ((cursor.column + (cursor.row - 1) * COLUMN >= ROW * COLUMN) && (myerror.getErrorCode() == CURSOR_RIGHT)) {
+    if ((cursor.column + (cursor.row - 1) * COLUMN >= ROW * COLUMN) && (myerror.getErrorCode() == CURSOR_RIGHT)) {  //Caso en el que el cursor se encuentra al final de todo
         for (int i = 0; i < ROW * COLUMN - 1; i++) {
             str[i] = str[i + 1];
         }
     }
     str.insert((cursor.column + (cursor.row - 1) * COLUMN) - 1, 1, c);
-    //for (int j = 0; j < cursor.row; j++) {
-    //    if (j == 1) {
-    //        for (int i = 0; i < COLUMN; i++) {
-    //            al_draw_textf(font, letter, INIT_X_POS + i * X_OFFSET, INIT_Y_POS, ALLEGRO_ALIGN_CENTER, "%c", str[i]);
-    //        }
-    //    }
-    //    for (int i = j*COLUMN; i < cursor.column+j*COLUMN; i++) {
-    //        al_draw_textf(font, letter, INIT_X_POS + (i-j*(int)COLUMN)* X_OFFSET, INIT_Y_POS + j * Y_OFFSET, ALLEGRO_ALIGN_CENTER, "%c", str[i]);
-    //    }
-    //}
     for (int j = 0; j < ROW; j++) {
         if (j == ROW - 1) {
-            for (int i = 0; i < COLUMN; i++) {
+            for (int i = 0; i < COLUMN; i++) {      // Caso segunda columna
                 al_draw_textf(font, letter, INIT_X_POS + i * X_OFFSET, INIT_Y_POS + Y_OFFSET, ALLEGRO_ALIGN_CENTER, "%c", str[i + COLUMN]);
             }
         }
         else {
-            for (int i = 0; i < COLUMN; i++) {
+            for (int i = 0; i < COLUMN; i++) {      // Caso primera columna
                 al_draw_textf(font, letter, INIT_X_POS + i * X_OFFSET, INIT_Y_POS, ALLEGRO_ALIGN_CENTER, "%c", str[i]);
             }
         }
     }
     lcdMoveCursorRight();
     al_flip_display();
-    al_rest(0.06);
+    al_rest(1.0/FPS);
     return *this;
 
 }
 
 basicLCD& KevinLCD::operator<<(const char* c) {
-    for (int i = 0; c[i] != '\0'; i++) {
+    for (int i = 0; c[i] != '\0'; i++) {        // Escribo caracter por caracter
         *this << c[i];
     }
-    this->myerror = lcdError("", "", 0);
+    if (myerror.getErrorCode() == CURSOR_RIGHT) {
+        this->myerror = lcdError("Cursor", "Can´t move cursor right", CURSOR_STILL_RIGHT);
+    }
     return *this;
 }
 
