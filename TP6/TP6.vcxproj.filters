@@ -24,12 +24,18 @@
     <ClCompile Include="Allegro.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="KevinLCD.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="basicLCD.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Allegro.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="KevinLCD.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
