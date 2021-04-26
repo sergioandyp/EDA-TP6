@@ -166,7 +166,7 @@ public:
 	* Name: lcdSetCursorPosition
 	* Entra: Recibe una estructura tipo cursorPosition
 	* Resulta: Posiciona el cursor en la posición dada
-	* por row y column. row[0-1] col[0-19]. Ante un valor inválido
+	* por row y column. row[0-1] col[0-15]. Ante un valor inválido
 	* de row y/o column ignora la instrucción (no hace nada).
 	*
 	* Devuelve en su nombre “true” si fue satisfactoria “false”

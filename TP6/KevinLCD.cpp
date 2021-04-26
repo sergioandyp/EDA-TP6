@@ -211,12 +211,12 @@ bool KevinLCD::lcdMoveCursorLeft() {
 
 
 bool KevinLCD::lcdSetCursorPosition(const cursorPosition pos) {
-    if (cursor.column > COLUMN || cursor.row > ROW) {
+    if (cursor.column > COLUMN || cursor.row > ROW || cursor.column < 0 || cursor.row < 0) {
         this->myerror = lcdError("Cursor", "Can´t set the cursor", CURSOR_SET);
         return false;
     }
-    cursor.column = pos.column;
-    cursor.row = pos.row;
+    cursor.column = pos.column + 1;
+    cursor.row = pos.row + 1;
     return true;
 }
 
