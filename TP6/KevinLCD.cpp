@@ -17,7 +17,7 @@
 #define COLUMN  16
 #define ROW 2
 
-#define FPS 11
+#define FPS 20
 
 #define INIT_X_POS 100
 #define X_OFFSET 22.5
@@ -114,7 +114,8 @@ bool KevinLCD::lcdClearToEOL() {
     str.resize(cursor.column + (cursor.row - 1) * COLUMN - 1, ' ');     // Borro el string desde el cursor
     str.resize(COLUMN * ROW, ' ');                                      // y lo completo con espacios
     al_draw_bitmap(img, 0, 0, 0);
-    al_flip_display();
+    *this << ' ';
+    lcdMoveCursorLeft();
     return true;
 }
 
