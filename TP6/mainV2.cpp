@@ -1,11 +1,14 @@
 #include "Allegro.h"
 #include "basicLCD.h"
+
 #include "KevinLCD.h"
 #include "SergioLCD.h"
+#include "RoccoLCD.h"
+
 #include <iostream>
 #include <allegro5/allegro.h>
 
-#define LCD_COUNT	2
+#define LCD_COUNT	3
 #define TIME		2
 
 enum names {KEVIN=0, SERGIO, ROCCO};
@@ -21,10 +24,6 @@ int main() {
 	
 	
 	basicLCD* lcd = nullptr;
-	//lcd[0] = new KevinLCD;
-	//lcd[1] = new SergioLCD;
-	//lcd[2] = new RoccoLCD; //CAMBIARLO
-
 
 	for (int i = 0; i < LCD_COUNT; i++) {
 
@@ -36,7 +35,7 @@ int main() {
 			lcd = new SergioLCD;
 			break;
 		case ROCCO:
-			//lcd = new RoccoLCD;
+			lcd = new RoccoLCD;
 			break;
 		}
 
@@ -47,7 +46,7 @@ int main() {
 		*lcd << 'a' << 'b' << 'c' << 'd' << 'e' << 'f' << 'g' << 'h' << 'i' << 'j' << 'k' << 'l' << 'm' << 'n' << 'o' << 'p' << 'q' << 'r';
 		al_rest(TIME);
 		lcd->lcdSetCursorPosition({0, 5});
-		//lcd->lcdMoveCursorUp();
+		lcd->lcdMoveCursorUp();
 		lcd->lcdClearToEOL();
 		al_rest(TIME);
 		*lcd << 'z' << 'w' << 'x';
@@ -59,7 +58,11 @@ int main() {
 		*lcd << "TEXTO EN MAYUSCULA";
 		al_rest(TIME);
 		lcd->lcdMoveCursorLeft();
-		*lcd << 'A';
+		lcd->lcdMoveCursorLeft();
+		lcd->lcdMoveCursorLeft();
+		lcd->lcdMoveCursorLeft();
+
+		*lcd << 'X';
 		al_rest(TIME);
 
 		delete lcd;

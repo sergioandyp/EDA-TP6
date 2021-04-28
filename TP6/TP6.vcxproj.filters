@@ -30,6 +30,9 @@
     <ClCompile Include="SergioLCD.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="RoccoLCD.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="basicLCD.h">
@@ -44,6 +47,9 @@
     <ClInclude Include="SergioLCD.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="RoccoLCD.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -55,12 +61,18 @@
     <Image Include="sergioLCD.jpg">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="..\..\16x2_LCD_displayF.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Font Include="img\Sans.ttf">
       <Filter>Resource Files</Filter>
     </Font>
     <Font Include="sergioFont.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="..\..\DS-DIGI.ttf">
       <Filter>Resource Files</Filter>
     </Font>
   </ItemGroup>

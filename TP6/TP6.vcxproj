@@ -165,22 +165,26 @@
     <ClCompile Include="basicLCD.cpp" />
     <ClCompile Include="KevinLCD.cpp" />
     <ClCompile Include="mainV2.cpp" />
+    <ClCompile Include="RoccoLCD.cpp" />
     <ClCompile Include="SergioLCD.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Allegro.h" />
     <ClInclude Include="basicLCD.h" />
     <ClInclude Include="KevinLCD.h" />
+    <ClInclude Include="RoccoLCD.h" />
     <ClInclude Include="SergioLCD.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="..\..\16x2_LCD_displayF.jpg" />
     <Image Include="img\background.jpg" />
     <Image Include="sergioLCD.jpg" />
   </ItemGroup>
   <ItemGroup>
+    <Font Include="..\..\DS-DIGI.ttf" />
     <Font Include="img\Sans.ttf" />
     <Font Include="sergioFont.ttf" />
   </ItemGroup>
